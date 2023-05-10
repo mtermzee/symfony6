@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use function Symfony\Component\String\u;
 
 class HomeController extends AbstractController
 {
@@ -41,15 +42,10 @@ class HomeController extends AbstractController
     }
 
     //wildcard Routes
-    #[Route('/browse/{slug}')]
+    #[Route('/browse/{slug}', name: 'app_browse')]
     public function browse(string $slug = null): Response
     {
-        if ($slug) {
-            $genre = str_replace('-', ' ', $slug);
-        } else {
-            $genre = 'Browse our collection of Genres';
-        }
-
+        $genre = $slug ? u(str_replace('-', ' ', $slug))->title(true) : null;
 
         return $this->render('home/browse.html.twig', [
             'genre' => $genre
