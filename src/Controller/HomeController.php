@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use function Symfony\Component\String\u;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class HomeController extends AbstractController
 {
@@ -43,24 +44,15 @@ class HomeController extends AbstractController
 
     //wildcard Routes
     #[Route('/browse/{slug}', name: 'app_browse')]
-    public function browse(string $slug = null): Response
+    public function browse(HttpClientInterface $httpClient, string $slug = null): Response
     {
         $genre = $slug ? u(str_replace('-', ' ', $slug))->title(true) : null;
-        $mixes = $this->getMixes();
+        $response = $httpClient->request('GET', 'https://raw.githubusercontent.com/SymfonyCasts/vinyl-mixes/main/mixes.json');
+        $mixes = $response->toArray();
 
         return $this->render('home/browse.html.twig', [
             'genre' => $genre,
             'mixes' => $mixes,
         ]);
-    }
-
-    private function getMixes(): array
-    {
-        return [
-            ['title' => 'The Best Mix', 'trackCount' => 14, 'genre' => 'Rock', 'createdAt' => new \DateTime('2022-10-02')],
-            ['title' => 'The Hottest Mix', 'trackCount' => 12, 'genre' => 'Pop', 'createdAt' => new \DateTime('2022-10-02')],
-            ['title' => 'The Coolest Mix', 'trackCount' => 10, 'genre' => 'R&B', 'createdAt' => new \DateTime('2022-10-02')],
-            ['title' => 'The Newest Mix', 'trackCount' => 8, 'genre' => 'Hip Hop', 'createdAt' => new \DateTime('2022-10-02')],
-        ];
     }
 }
