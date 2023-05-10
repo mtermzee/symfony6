@@ -45,11 +45,14 @@ class HomeController extends AbstractController
     public function browse(string $slug = null): Response
     {
         if ($slug) {
-            $title = str_replace('-', ' ', $slug);
+            $genre = str_replace('-', ' ', $slug);
         } else {
-            $title = 'Browse our collection of Genres';
+            $genre = 'Browse our collection of Genres';
         }
 
-        return new Response('Genre: ' . $title);
+
+        return $this->render('home/browse.html.twig', [
+            'genre' => $genre
+        ]);
     }
 }
