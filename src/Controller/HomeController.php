@@ -21,8 +21,20 @@ class HomeController extends AbstractController
     #[Route('/home', name: 'app_home')]
     public function homepage(): Response
     {
-        //return $this->render('home.html.twig');
-        return new Response('Hello World');
+        $tracks = [
+            ['song' => 'Gangsta\'s Paradise', 'artist' => 'Coolio'],
+            ['song' => 'Waterfalls', 'artist' => 'TLC'],
+            ['song' => 'Creep', 'artist' => 'Radiohead'],
+            ['song' => 'Kiss from a Rose', 'artist' => 'Seal'],
+            ['song' => 'On Bended Knee', 'artist' => 'Boyz II Men'],
+            ['song' => 'Fantasy', 'artist' => 'Mariah Carey'],
+        ];
+
+        return $this->render('home/homepage.html.twig', [
+            'title' => 'Welcome to the Homepage',
+            'tracks' => $tracks,
+        ]);
+        //return new Response('Hello World');
     }
 
     //wildcard Routes
