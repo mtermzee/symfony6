@@ -46,9 +46,21 @@ class HomeController extends AbstractController
     public function browse(string $slug = null): Response
     {
         $genre = $slug ? u(str_replace('-', ' ', $slug))->title(true) : null;
+        $mixes = $this->getMixes();
 
         return $this->render('home/browse.html.twig', [
-            'genre' => $genre
+            'genre' => $genre,
+            'mixes' => $mixes,
         ]);
+    }
+
+    private function getMixes(): array
+    {
+        return [
+            ['title' => 'The Best Mix', 'trackCount' => 14, 'genre' => 'Rock', 'createdAt' => new \DateTime('2022-10-02')],
+            ['title' => 'The Hottest Mix', 'trackCount' => 12, 'genre' => 'Pop', 'createdAt' => new \DateTime('2022-10-02')],
+            ['title' => 'The Coolest Mix', 'trackCount' => 10, 'genre' => 'R&B', 'createdAt' => new \DateTime('2022-10-02')],
+            ['title' => 'The Newest Mix', 'trackCount' => 8, 'genre' => 'Hip Hop', 'createdAt' => new \DateTime('2022-10-02')],
+        ];
     }
 }
