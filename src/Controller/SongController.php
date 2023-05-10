@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -9,10 +10,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class SongController extends AbstractController
 {
     #[Route('/api/song/{id<\d+>}', name: 'app_song', methods: ['GET'])]
-    public function getSong(int $id): Response
+    public function getSong(int $id, LoggerInterface $logger): Response
     {
-
-
         $song = [
             'id' => $id,
             'title' => 'Song title',
@@ -24,6 +23,10 @@ class SongController extends AbstractController
             'image' => 'https://via.placeholder.com/150',
             'url' => 'https://via.placeholder.com/150',
         ];
+
+        $logger->info('Returning API response for song {song}', [
+            'song' => $id,
+        ]);
 
         return $this->json($song);
     }
