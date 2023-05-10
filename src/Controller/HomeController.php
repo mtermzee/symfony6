@@ -30,6 +30,9 @@ class HomeController extends AbstractController
             ['song' => 'Fantasy', 'artist' => 'Mariah Carey'],
         ];
 
+        //dd($tracks);
+        //dump($tracks);
+
         return $this->render('home/homepage.html.twig', [
             'title' => 'Welcome to the Homepage',
             'tracks' => $tracks,
