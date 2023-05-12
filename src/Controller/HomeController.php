@@ -63,7 +63,8 @@ class HomeController extends AbstractController
         // or we can use VinylMixRepository to query
         /* $mixRepositrory = $this->em->getRepository(VinylMix::class);
         $mixes = $mixRepositrory->findAll();*/
-        $mixes = $this->vr->findBy([], ['votes' => 'DESC']);
+        //$mixes = $this->vr->findBy([], ['votes' => 'DESC']);
+        $mixes = $this->vr->findAllOrderByVotes($slug);
 
         return $this->render('home/browse.html.twig', [
             'genre' => $genre,
