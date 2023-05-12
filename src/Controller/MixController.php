@@ -50,10 +50,23 @@ class MixController extends AbstractController
         ));
     }
 
-    #[Route('/mix/{id}', name: 'app_mix_getById')]
+    /* #[Route('/mix/{id}', name: 'app_mix_getById')]
     public function show($id): Response
     {
         $mix = $this->vr->find($id);
+
+        if (!$mix) {
+            throw $this->createNotFoundException(sprintf('No mix for id %d', $id));
+        }
+
+        return $this->render('mix/show.html.twig', [
+            'mix' => $mix,
+        ]);
+    }*/
+
+    #[Route('/mix/{id}', name: 'app_mix_getById')]
+    public function show(VinylMix $mix): Response
+    {
         return $this->render('mix/show.html.twig', [
             'mix' => $mix,
         ]);
