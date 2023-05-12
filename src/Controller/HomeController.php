@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\VinylMix;
 use App\Service\MixRepositrory;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,6 +13,13 @@ use function Symfony\Component\String\u;
 
 class HomeController extends AbstractController
 {
+    private EntityManagerInterface $em;
+
+    public function __construct(EntityManagerInterface $entityManagerInterface)
+    {
+        $this->em = $entityManagerInterface;
+    }
+
     #[Route('/index', name: 'app_home_index')]
     public function index(): JsonResponse
     {
@@ -44,9 +53,12 @@ class HomeController extends AbstractController
 
     //wildcard Routes
     #[Route('/browse/{slug}', name: 'app_browse')]
-    public function browse(MixRepositrory $mixRepositrory, string $slug = null): Response
+    public function browse(string $slug = null): Response
     {
         $genre = $slug ? u(str_replace('-', ' ', $slug))->title(true) : null;
+
+        // or we can use VinylMixRepository to query
+        $mixRepositrory = $this->em->getRepository(VinylMix::class);
         $mixes = $mixRepositrory->findAll();
 
         return $this->render('home/browse.html.twig', [
