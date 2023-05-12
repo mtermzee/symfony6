@@ -113,4 +113,21 @@ class VinylMix
 
         return $this;
     }
+
+    public function getVotesString()
+    {
+        if ($this->votes > 0) {
+            return '+' . $this->votes;
+        }
+        return (string) $this->votes;
+    }
+
+    public function getImageUrl(int $width): string
+    {
+        return sprintf(
+            'https://picsum.photos/id/%d/%d',
+            ($this->getId() + 50) % 1000, // number between 0 and 1000, based on the id
+            $width
+        );
+    }
 }

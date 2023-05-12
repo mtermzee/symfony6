@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\VinylMix;
+use App\Repository\VinylMixRepository;
 use App\Service\MixRepositrory;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,10 +15,12 @@ use function Symfony\Component\String\u;
 class HomeController extends AbstractController
 {
     private EntityManagerInterface $em;
+    private VinylMixRepository $vr;
 
-    public function __construct(EntityManagerInterface $entityManagerInterface)
+    public function __construct(EntityManagerInterface $entityManagerInterface, VinylMixRepository $vinylMixRepository)
     {
         $this->em = $entityManagerInterface;
+        $this->vr = $vinylMixRepository;
     }
 
     #[Route('/index', name: 'app_home_index')]
@@ -58,8 +61,9 @@ class HomeController extends AbstractController
         $genre = $slug ? u(str_replace('-', ' ', $slug))->title(true) : null;
 
         // or we can use VinylMixRepository to query
-        $mixRepositrory = $this->em->getRepository(VinylMix::class);
-        $mixes = $mixRepositrory->findAll();
+        /* $mixRepositrory = $this->em->getRepository(VinylMix::class);
+        $mixes = $mixRepositrory->findAll();*/
+        $mixes = $this->vr->findBy([], ['votes' => 'DESC']);
 
         return $this->render('home/browse.html.twig', [
             'genre' => $genre,
