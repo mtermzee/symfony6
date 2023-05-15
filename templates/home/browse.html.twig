@@ -20,7 +20,7 @@
 
 		<div>
 			<h2 class="mt-5">Mixes</h2>
-			<turbo-frame id="mix-browse-list-{{ pager.currentPage }}">
+			<turbo-frame id="mix-browse-list">
 				<div class="row">
 					{% for mix in pager %}
 						<div class="col col-md-4">
@@ -42,9 +42,7 @@
 						</div>
 					{% endfor %}
 
-					{% if pager.hasNextPage %}
-						<turbo-frame id="mix-browse-list-{{ pager.nextPage }}" src="{{ pagerfanta_page_url(pager, pager.nextPage) }}" loading="lazy"></turbo-frame>
-					{% endif %}
+					{{ pagerfanta(pager) }}
 				</div>
 			</turbo-frame>
 		</div>
