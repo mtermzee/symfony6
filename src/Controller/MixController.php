@@ -33,7 +33,7 @@ class MixController extends AbstractController
     public function new(): Response
     {
         $mix = new VinylMix();
-        $mix->setTitle('1. The Prodigy - No Good (Start The Dance) (Bad For You Mix)');
+        $mix->setTitle('The Prodigy - No Good (Start The Dance) (Bad For You Mix)');
         $mix->setDescription('The Prodigy');
         $genres = ['pop', 'rock'];
         $mix->setGenre($genres[array_rand($genres)]);
@@ -65,8 +65,8 @@ class MixController extends AbstractController
         ]);
     }*/
 
-    #[Route('/mix/{id}', name: 'app_mix_getById')]
-    public function show(VinylMix $mix): Response
+    #[Route('/mix/{slug}', name: 'app_mix_getBySlug')]
+    public function showOnew(VinylMix $mix): Response
     {
         return $this->render('mix/show.html.twig', [
             'mix' => $mix,
@@ -88,8 +88,12 @@ class MixController extends AbstractController
         $this->em->flush();
         $this->addFlash('success', 'Vote counted!');
 
-        return $this->redirectToRoute('app_mix_getById', [
+        /*return $this->redirectToRoute('app_mix_getById', [
             'id' => $mix->getId(),
+        ]);*/
+
+        return $this->redirectToRoute('app_mix_getBySlug', [
+            'slug' => $mix->getSlug(),
         ]);
     }
 }
