@@ -11,6 +11,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use function Symfony\Component\String\u;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
+use Pagerfanta\Pagerfanta;
+use Symfony\Component\HttpFoundation\Request;
 
 class HomeController extends AbstractController
 {
@@ -55,8 +58,8 @@ class HomeController extends AbstractController
     }
 
     //wildcard Routes
-    #[Route('/browse/{slug}', name: 'app_browse')]
-    public function browse(string $slug = null): Response
+    #[Route('/browse', name: 'app_browse')]
+    public function browse(string $slug = null, Request $request): Response
     {
         $genre = $slug ? u(str_replace('-', ' ', $slug))->title(true) : null;
 
@@ -64,11 +67,19 @@ class HomeController extends AbstractController
         /* $mixRepositrory = $this->em->getRepository(VinylMix::class);
         $mixes = $mixRepositrory->findAll();*/
         //$mixes = $this->vr->findBy([], ['votes' => 'DESC']);
-        $mixes = $this->vr->findAllOrderByVotes($slug);
+        //$mixes = $this->vr->findAllOrderByVotes($slug);
+
+        $queryBuilder = $this->vr->createOrderedByVotesQueryBuilder($slug);
+        $adapter = new QueryAdapter($queryBuilder);
+        $pagerfanta = Pagerfanta::createForCurrentPageWithMaxPerPage(
+            $adapter,
+            $request->query->get('page', 1),
+            9
+        );
 
         return $this->render('home/browse.html.twig', [
             'genre' => $genre,
-            'mixes' => $mixes,
+            'pager' => $pagerfanta,
         ]);
     }
 }
