@@ -85,6 +85,10 @@ class MixController extends AbstractController
             $mix->setVotes($mix->getVotes() - 1);
         }
 
-        dd($mix);
+        $this->em->flush();
+
+        return $this->redirectToRoute('app_mix_getById', [
+            'id' => $mix->getId(),
+        ]);
     }
 }
